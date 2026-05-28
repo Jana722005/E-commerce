@@ -1,30 +1,13 @@
-import axios from "axios";
-
-const API = axios.create({
-  baseURL:
-    "http://localhost:5000/api/notifications",
-});
-
+import API from "./api";
 
 // GET NOTIFICATIONS
-export const getNotifications =
-  async (userId) => {
-
-    const response = await API.get(
-      `/${userId}`
-    );
-
-    return response.data;
-  };
-
+export const getNotifications = async (userId) => {
+  const response = await API.get(`/notifications/${userId}`);
+  return response.data;
+};
 
 // MARK AS READ
-export const markAsRead =
-  async (id) => {
-
-    const response = await API.put(
-      `/${id}`
-    );
-
-    return response.data;
-  };
+export const markAsRead = async (id) => {
+  const response = await API.put(`/notifications/${id}`);
+  return response.data;
+};

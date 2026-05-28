@@ -1,46 +1,22 @@
-const express = require(
-  "express"
-);
-
-const router =
-  express.Router();
+const express = require("express");
 
 const {
-
   placeOrder,
-
   getUserOrders,
-
   getAllOrders,
-
   updateOrderStatus,
+} = require("../controllers/orderController");
 
-} = require(
-  "../controllers/orderController"
-);
+const { protect, admin } = require("../middleware/authMiddleware");
 
-// PLACE ORDER
-router.post(
-  "/",
-  placeOrder
-);
+const router = express.Router();
 
-// GET USER ORDERS
-router.get(
-  "/my-orders",
-  getUserOrders
-);
+// Protected user routes
+router.post("/", protect, placeOrder);
+router.get("/my-orders", protect, getUserOrders);
 
-// GET ALL ORDERS (ADMIN)
-router.get(
-  "/",
-  getAllOrders
-);
-
-// UPDATE ORDER STATUS
-router.put(
-  "/:id",
-  updateOrderStatus
-);
+// Administrative routes
+router.get("/", protect, admin, getAllOrders);
+router.put("/:id", protect, admin, updateOrderStatus);
 
 module.exports = router;

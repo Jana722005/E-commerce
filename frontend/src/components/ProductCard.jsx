@@ -12,7 +12,7 @@ import { addToCart } from "../redux/slices/cartSlice";
 
 import { addToWishlist } from "../services/authService";
 
-function ProductCard({ product }) {
+function ProductCard({ product, onViewDetails }) {
 
   const dispatch = useDispatch();
 
@@ -63,98 +63,116 @@ function ProductCard({ product }) {
     };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden border">
+    <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col justify-between h-full group">
 
-      {/* IMAGE */}
-      <div className="relative">
+      {/* IMAGE CONTAINER */}
+      <div className="relative overflow-hidden aspect-[4/3] bg-gray-50 border-b border-gray-100">
 
         <img
           src={product.image}
           alt={product.title}
-          className="w-full h-40 md:h-44 object-cover"
+          className="w-full h-full object-cover cursor-pointer group-hover:scale-105 transition-transform duration-700 ease-out"
+          onClick={onViewDetails}
         />
 
-        {/* WISHLIST */}
+        {/* WISHLIST BUTTON */}
         <button
           onClick={handleWishlist}
-          className="absolute top-3 right-3 bg-white p-2 rounded-full shadow hover:scale-110 transition text-red-500"
+          className="absolute top-3 right-3 bg-white/70 backdrop-blur-md p-2.5 rounded-full shadow-sm hover:scale-110 active:scale-95 transition-all duration-200 text-red-500 border border-white/20 hover:bg-white"
         >
-          <FaHeart />
+          <FaHeart className="w-4 h-4" />
         </button>
 
       </div>
 
-      {/* CONTENT */}
-      <div className="p-4">
+      {/* CONTENT AREA */}
+      <div className="p-5 flex flex-col flex-grow justify-between">
 
-        {/* CATEGORY */}
-        <div className="mb-2">
-
-          <span className="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full">
-            {product.category}
-          </span>
-
-        </div>
-
-        {/* TITLE */}
-        <h3 className="text-lg font-bold text-gray-800 line-clamp-1">
-          {product.title}
-        </h3>
-
-        {/* DESCRIPTION */}
-        <p className="text-gray-500 mt-2 text-sm line-clamp-2">
-          {product.description}
-        </p>
-
-        {/* RATING */}
-        <div className="flex items-center justify-between mt-4">
-
-          <div className="text-yellow-500 text-sm font-semibold">
-            ⭐ {product.rating?.toFixed(1) || 0}
+        <div>
+          {/* CATEGORY & STOCK STATUS */}
+          <div className="flex items-center justify-between mb-3">
+            <span className="bg-green-50 text-green-700 text-[10px] font-extrabold tracking-wider uppercase px-2.5 py-1 rounded-md border border-green-100/50">
+              {product.category}
+            </span>
+            {product.quantity > 5 ? (
+              <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100/30">
+                In Stock
+              </span>
+            ) : product.quantity > 0 ? (
+              <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-100/30">
+                Only {product.quantity} left
+              </span>
+            ) : (
+              <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-md border border-red-100/30">
+                Out of Stock
+              </span>
+            )}
           </div>
 
-          <div className="text-gray-400 text-xs">
-            {product.numReviews || 0} Reviews
+          {/* TITLE */}
+          <h3
+            className="text-base font-bold text-gray-800 line-clamp-1 cursor-pointer hover:text-green-600 transition-colors duration-200 tracking-tight"
+            onClick={onViewDetails}
+            title={product.title}
+          >
+            {product.title}
+          </h3>
+
+          {/* DESCRIPTION */}
+          <p className="text-gray-500 mt-1.5 text-xs line-clamp-2 leading-relaxed">
+            {product.description}
+          </p>
+
+          {/* RATING & REVIEWS */}
+          <div className="flex items-center gap-2 mt-3">
+            <div className="flex items-center text-amber-500 font-bold bg-amber-50/50 px-2 py-0.5 rounded border border-amber-100/20 text-xs gap-1">
+              <span>★</span>
+              <span>{product.rating?.toFixed(1) || 0}</span>
+            </div>
+            <span className="text-gray-300 text-xs">•</span>
+            <span className="text-gray-400 text-[11px] font-semibold">
+              {product.numReviews || 0} Reviews
+            </span>
+          </div>
+        </div>
+
+        {/* PRICE & ACTIONS */}
+        <div className="mt-5">
+          <div className="flex items-baseline justify-between border-t border-gray-100/70 pt-4">
+            <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider">
+              Price
+            </span>
+            <span className="text-xl font-extrabold text-green-700">
+              ₹{product.price}
+            </span>
           </div>
 
-        </div>
+          {/* ACTION BUTTONS */}
+          <div className="mt-3.5 flex gap-2">
 
-        {/* PRICE + STOCK */}
-        <div className="flex items-center justify-between mt-4">
+            {/* BUY NOW */}
+            <button
+              onClick={handleBuyNow}
+              className="flex-1 bg-green-600 hover:bg-green-700 active:scale-95 transition-all text-white py-2.5 rounded-xl text-xs font-bold tracking-wide"
+            >
+              Buy Now
+            </button>
 
-          <span className="text-xl font-bold text-green-600">
-            ₹{product.price}
-          </span>
+            {/* CART */}
+            <button
+              onClick={handleAddToCart}
+              className="bg-green-50 hover:bg-green-100 text-green-700 p-3 rounded-xl active:scale-95 transition-all border border-green-100/50"
+              title="Add to Basket"
+            >
+              <FaShoppingCart className="w-4 h-4" />
+            </button>
 
-          <span className="text-sm text-gray-500">
-            Stock: {product.quantity}
-          </span>
-
-        </div>
-
-        {/* BUTTONS */}
-        <div className="mt-4 flex gap-2">
-
-          {/* BUY NOW */}
-          <button
-            onClick={handleBuyNow}
-            className="flex-1 bg-green-600 hover:bg-green-700 transition text-white py-2 rounded-xl text-sm font-semibold"
-          >
-            Buy Now
-          </button>
-
-          {/* CART */}
-          <button
-            onClick={handleAddToCart}
-            className="bg-gray-100 hover:bg-gray-200 p-3 rounded-xl transition"
-          >
-            <FaShoppingCart />
-          </button>
-
+          </div>
         </div>
 
       </div>
     </div>
+
     
   );
 }

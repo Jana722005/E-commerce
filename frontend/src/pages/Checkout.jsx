@@ -11,7 +11,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-import axios from "axios";
+import API from "../services/api";
 
 import {
   clearCart,
@@ -158,10 +158,8 @@ function Checkout() {
         // RAZORPAY
         const {
           data,
-        } = await axios.post(
-
-          "http://localhost:5000/api/payment/create-order",
-
+        } = await API.post(
+          "/payment/create-order",
           {
             amount:
               totalPrice,

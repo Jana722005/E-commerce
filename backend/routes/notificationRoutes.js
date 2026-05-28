@@ -3,14 +3,13 @@ const express = require("express");
 const {
   getNotifications,
   markAsRead,
-} = require(
-  "../controllers/notificationController"
-);
+} = require("../controllers/notificationController");
+
+const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-router.get("/:userId", getNotifications);
-
-router.put("/:id", markAsRead);
+router.get("/:userId", protect, getNotifications);
+router.put("/:id", protect, markAsRead);
 
 module.exports = router;

@@ -99,12 +99,6 @@ function App() {
           }
         />
 
-        {/* UNKNOWN ROUTE */}
-        <Route
-          path="*"
-          element={<Navigate to="/" />}
-        />
-
         <Route
           path="/wishlist"
           element={
@@ -121,6 +115,12 @@ function App() {
               <Checkout />
             </ProtectedRoute>
           }
+        />
+
+        {/* UNKNOWN ROUTE (Wildcard moved to bottom) */}
+        <Route
+          path="*"
+          element={<Navigate to="/" />}
         />
       </Routes>
 

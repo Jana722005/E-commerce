@@ -110,15 +110,10 @@ const addReview =
       }
 
       const review = {
-
-        user:
-          req.body.user,
-
-        rating:
-          req.body.rating,
-
-        comment:
-          req.body.comment,
+        user: req.body.userId || req.body.user,
+        name: req.body.name,
+        rating: Number(req.body.rating),
+        comment: req.body.comment,
       };
 
       product.reviews.push(

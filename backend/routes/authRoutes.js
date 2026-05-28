@@ -10,37 +10,22 @@ const {
   removeFromWishlist,
 } = require("../controllers/authController");
 
+const { protect } = require("../middleware/authMiddleware");
+
 const router = express.Router();
 
-const upload = require(
-  "../middleware/uploadMiddleware"
-);
+const upload = require("../middleware/uploadMiddleware");
 
+// Public routes
 router.post("/register", registerUser);
-
 router.post("/login", loginUser);
 
-router.get("/profile/:id", getProfile);
+// Protected routes
+router.get("/profile/:id", protect, getProfile);
+router.put("/profile/:id", protect, upload.single("profileImage"), updateProfile);
 
-router.put(
-  "/profile/:id",
-  upload.single("profileImage"),
-  updateProfile
-);
-
-router.post(
-  "/wishlist/:userId",
-  addToWishlist
-);
-
-router.get(
-  "/wishlist/:userId",
-  getWishlist
-);
-
-router.delete(
-  "/wishlist/:userId/:productId",
-  removeFromWishlist
-);
+router.post("/wishlist/:userId", protect, addToWishlist);
+router.get("/wishlist/:userId", protect, getWishlist);
+router.delete("/wishlist/:userId/:productId", protect, removeFromWishlist);
 
 module.exports = router;

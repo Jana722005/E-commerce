@@ -1,59 +1,28 @@
-const express = require(
-  "express"
-);
-
-const router =
-  express.Router();
-
-const upload = require(
-  "../middleware/uploadMiddleware"
-);
+const express = require("express");
 
 const {
-
   createProduct,
-
   getProducts,
-
   addReview,
-
   updateProduct,
-
   deleteProduct,
+} = require("../controllers/productController");
 
-} = require(
-  "../controllers/productController"
-);
+const { protect, admin } = require("../middleware/authMiddleware");
 
-// CREATE PRODUCT
-router.post(
-  "/",
-  upload.single("image"),
-  createProduct
-);
+const upload = require("../middleware/uploadMiddleware");
 
-// GET PRODUCTS
-router.get(
-  "/",
-  getProducts
-);
+const router = express.Router();
 
-// ADD REVIEW
-router.post(
-  "/:id/reviews",
-  addReview
-);
+// Public routes
+router.get("/", getProducts);
 
-// UPDATE PRODUCT
-router.put(
-  "/:id",
-  updateProduct
-);
+// Protected routes
+router.post("/:id/reviews", protect, addReview);
 
-// DELETE PRODUCT
-router.delete(
-  "/:id",
-  deleteProduct
-);
+// Administrative routes
+router.post("/", protect, admin, upload.single("image"), createProduct);
+router.put("/:id", protect, admin, updateProduct);
+router.delete("/:id", protect, admin, deleteProduct);
 
 module.exports = router;
